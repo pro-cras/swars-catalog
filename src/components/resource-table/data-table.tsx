@@ -2,20 +2,50 @@
 
 import {
   ColumnDef,
+  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Button } from "../button/Button";
+import { Resource } from "../../api/api";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+type TData = Resource<"people">;
+const columnHelper = createColumnHelper<TData>();
 
-export function DataTable<TData, TValue>({
-  columns,
+export function DataTable({
   data,
-}: DataTableProps<TData, TValue>) {
+  onDelete,
+  onEdit,
+}: {
+  data: TData[];
+  onDelete: (url: string) => void;
+  onEdit: (url: string, value: TData) => void;
+}) {
+  const columns: ColumnDef<TData>[] = [
+    {
+      accessorFn: (row) => row.name,
+      header: "Name",
+    },
+    {
+      accessorFn: (row) => row.height,
+      header: "Height",
+    },
+    {
+      accessorFn: (row) => row.gender,
+      header: "Gender",
+    },
+    columnHelper.display({
+      id: "actions",
+      cell: (props) => (
+        <RowActions
+          onDelete={() => onDelete(props.row.original)}
+          onEdit={() => onEdit(props.row.original)}
+        />
+      ),
+    }),
+  ];
+
   const table = useReactTable({
     data,
     columns,
@@ -63,6 +93,21 @@ export function DataTable<TData, TValue>({
           )}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+export function RowActions({
+  onDelete,
+  onEdit,
+}: {
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="flex gap-2">
+      <Button onClick={onEdit}>Edit</Button>
+      <Button onClick={onDelete}>Delete</Button>
     </div>
   );
 }

@@ -7,6 +7,7 @@ export function Button({
   ...props
 }: {
   href?: string;
+  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
