@@ -5,7 +5,9 @@ import { categories } from "./api/api";
 import { CategoryPage } from "./components/category-page/CategoryPage";
 import { AppShell } from "./components/shell/AppShell";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 10000 } },
+});
 
 const router = createBrowserRouter([
   {

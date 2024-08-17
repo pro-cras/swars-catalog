@@ -7,9 +7,5 @@ export function PageContent({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <main className={clsx("bg-white p-10 flex gap-8", className)}>
-      {children}
-    </main>
-  );
+  return <main className={clsx("bg-white p-10", className)}>{children}</main>;
 }

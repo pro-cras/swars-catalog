@@ -18,18 +18,17 @@ async function searchCategory<C extends Category>(category: C, query: string) {
   return data;
 }
 
-export function useSearchCategory({
+export function useSearchCategory<C extends Category>({
   query,
   category,
 }: {
   query: string;
-  category: Category;
+  category: C;
 }) {
   return useQuery({
     queryKey: ["category", category, query],
     queryFn: query
       ? () => {
-          console.log({ category });
           return searchCategory(category, query);
         }
       : skipToken,

@@ -11,7 +11,7 @@ export function CategoryPage() {
   return (
     <>
       <Header />
-      <PageContent>
+      <PageContent className="flex-col">
         <h1>{titleCase(category)}</h1>
         {category === "people" ? <ResourceTable category={category} /> : null}
       </PageContent>
