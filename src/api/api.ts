@@ -9,24 +9,23 @@ export const categories = [
 
 export type Category = (typeof categories)[number];
 
-const resourceLabelMap = {
-  starships: "name",
-  vehicles: "name",
-  people: "name",
-  planets: "name",
-  species: "name",
-  films: "title",
-} as const;
+interface BasicResourceWithName {
+  name: string;
+}
 
 interface ResourceMap {
   people: PeopleBasicProperties;
+  starships: BasicResourceWithName;
+  vehicles: BasicResourceWithName;
+  planets: BasicResourceWithName;
+  species: BasicResourceWithName;
+  films: { title: string };
 }
 
 export type Resource<C extends Category> = {
-  [key in (typeof resourceLabelMap)[C]]: string;
-} & { url: string; category: C } & (C extends keyof ResourceMap
-    ? ResourceMap[C]
-    : never);
+  url: string;
+  category: C;
+} & ResourceMap[C];
 
 interface PeopleBasicProperties {
   name: string;
@@ -40,3 +39,11 @@ interface PeopleBasicProperties {
   created: string;
   edited: string;
 }
+
+const film: Resource<Category> = {
+  // title: "A New Hope",
+  name: "A New Hope",
+  url: "https://swapi.dev/api/films/1/",
+  category: "people",
+};
+console.log({ film });
