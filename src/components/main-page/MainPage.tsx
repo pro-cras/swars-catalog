@@ -1,19 +1,17 @@
 import { Field, Label, Input } from "@headlessui/react";
 import { Header } from "../header/Header";
 import { useState } from "react";
-import { Shell } from "../shell/Shell";
+import { AppShell } from "../shell/AppShell";
 import { useDebounce } from "../../utils/use-debounce";
-import { useSearchAllCategories } from "../../api/api";
 import { PageContent } from "../page-content/PageContent";
+import { AllCategories } from "../all-categories/AllCategories";
 
 export function MainPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const query = useSearchAllCategories({
-    query: debouncedSearchTerm,
-  });
+
   return (
-    <Shell>
+    <AppShell>
       <Header>
         <Field className="flex gap-4">
           <Label className="text-white">Search</Label>
@@ -26,18 +24,10 @@ export function MainPage() {
         </Field>
       </Header>
       <PageContent>
-        {query.isLoading ? (
-          <p>Loading...</p>
-        ) : query.isError ? (
-          <p>Error: {query.error.message}</p>
-        ) : (
-          <ul>
-            {query.data.map((category) => (
-              <li key={category.id}>{category.name}</li>
-            ))}
-          </ul>
+        {debouncedSearchTerm && (
+          <AllCategories searchTerm={debouncedSearchTerm} />
         )}
       </PageContent>
-    </Shell>
+    </AppShell>
   );
 }

@@ -1,6 +1,6 @@
 import { Category, Resource } from "../api/api";
 
-export function getResourceTitle<C extends Category>(resource: Resource<C>) {
+export function getResourceTitle(resource: Resource<Category>): string {
   if (resource.category === "films") {
     return resource.title;
   }

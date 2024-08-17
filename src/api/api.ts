@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 
-const categories = [
+export const categories = [
   "starships",
   "vehicles",
   "people",
@@ -24,7 +24,7 @@ export type Resource<C extends Category> = {
   [key in (typeof resourceLabelMap)[C]]: string;
 } & { url: string; category: C };
 
-async function searchResource<C extends Category>(category: C, query: string) {
+async function searchCategory<C extends Category>(category: C, query: string) {
   const response = await fetch(
     `https://swapi.dev/api/${category}/?search=${query}`,
   );
@@ -41,21 +41,20 @@ async function searchResource<C extends Category>(category: C, query: string) {
   return data;
 }
 
-export function useSearchAllCategories({ query }: { query: string }) {
+export function useSearchCategory({
+  query,
+  category,
+}: {
+  query: string;
+  category: Category;
+}) {
   return useQuery({
-    queryKey: ["search", query],
-    queryFn: async () => {
-      type Tuple<C extends Category> = [C, Promise<{ results: Resource<C>[] }>];
-      const searches = new Map(
-        categories.map(
-          (category) =>
-            [category, searchResource(category, query)] satisfies Tuple<
-              typeof category
-            >,
-        ),
-      );
-      await Promise.all(searches.values());
-      return Object.fromEntries(searches);
-    },
+    queryKey: ["category", category, query],
+    queryFn: query
+      ? () => {
+          console.log({ category });
+          return searchCategory(category, query);
+        }
+      : skipToken,
   });
 }
