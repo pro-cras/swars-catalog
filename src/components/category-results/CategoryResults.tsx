@@ -1,3 +1,4 @@
+import { generatePath } from "react-router-dom";
 import { Category, useSearchCategory } from "../../api/api";
 import { getResourceTitle } from "../../utils/get-resource-title";
 import { titleCase } from "../../utils/title-case";
@@ -32,17 +33,30 @@ export function CategoryResults<C extends Category>({
     );
   }
 
+  function renderButton() {
+    if ((query.data?.results ?? []).length === 0) {
+      return null;
+    }
+    const path = generatePath(
+      `/${category}?${new URLSearchParams({ search: searchTerm }).toString()}`,
+    );
+    return (
+      <Button
+        className="absolute right-2 bottom-0 foo -translate-x-1 translate-y-1/2"
+        href={path}
+      >
+        View All
+      </Button>
+    );
+  }
+
   return (
     <section className="border-solid border-black border bg-white rounded-md p-4 relative">
       <h2 className="absolute top-0 left-4 -translate-y-1/2 bg-[white] pl-[5px] pr-[5px]">
         {titleCase(category)}
       </h2>
       {renderContent()}
-      {(query.data?.results ?? []).length > 0 && (
-        <Button className="absolute right-2 bottom-0 foo -translate-x-1 translate-y-1/2">
-          View All
-        </Button>
-      )}
+      {renderButton()}
     </section>
   );
 }

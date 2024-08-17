@@ -1,7 +1,6 @@
 import { Field, Label, Input } from "@headlessui/react";
 import { Header } from "../header/Header";
 import { useState } from "react";
-import { AppShell } from "../shell/AppShell";
 import { useDebounce } from "../../utils/use-debounce";
 import { PageContent } from "../page-content/PageContent";
 import { AllCategories } from "../all-categories/AllCategories";
@@ -11,7 +10,7 @@ export function MainPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   return (
-    <AppShell>
+    <>
       <Header>
         <Field className="flex gap-4">
           <Label className="text-white">Search</Label>
@@ -28,6 +27,6 @@ export function MainPage() {
           <AllCategories searchTerm={debouncedSearchTerm} />
         )}
       </PageContent>
-    </AppShell>
+    </>
   );
 }
