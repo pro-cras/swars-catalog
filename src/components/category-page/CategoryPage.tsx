@@ -3,6 +3,7 @@ import { Header } from "../header/Header";
 import { PageContent } from "../page-content/PageContent";
 import { Category } from "../../api/api";
 import { titleCase } from "../../utils/title-case";
+import { ResourceTable } from "../resource-table/ResourceTable";
 
 export function CategoryPage() {
   const location = useLocation();
@@ -12,6 +13,7 @@ export function CategoryPage() {
       <Header />
       <PageContent>
         <h1>{titleCase(category)}</h1>
+        {category === "people" ? <ResourceTable category={category} /> : null}
       </PageContent>
     </>
   );

@@ -1,7 +1,7 @@
 import { Category } from "../../api/api";
 import { Button } from "../button/Button";
 
-export function ResourceTable({ category }: { category: Category }) {
+export function ResourceTable(_props: { category: Category }) {
   return (
     <>
       <div className="flex">

@@ -1,5 +1,6 @@
 import { generatePath } from "react-router-dom";
-import { Category, useSearchCategory } from "../../api/api";
+import { Category } from "../../api/api";
+import { useSearchCategory } from "../../api/search-category";
 import { getResourceTitle } from "../../utils/get-resource-title";
 import { titleCase } from "../../utils/title-case";
 import { Button } from "../button/Button";
