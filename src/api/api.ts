@@ -39,11 +39,3 @@ interface PeopleBasicProperties {
   created: string;
   edited: string;
 }
-
-const film: Resource<Category> = {
-  // title: "A New Hope",
-  name: "A New Hope",
-  url: "https://swapi.dev/api/films/1/",
-  category: "people",
-};
-console.log({ film });

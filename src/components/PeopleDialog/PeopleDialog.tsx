@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useMemo } from "react";
 import AppDialog from "../dialog/Dialog";
 import { Fieldset, Field, Label, Input } from "@headlessui/react";
 import { Resource } from "../../api/api";
@@ -13,12 +13,18 @@ export function PeopleDialog({
   person: "new" | Resource<"people"> | null;
   onSubmit: (person: Resource<"people">) => void;
 }) {
-  const isExistingPerson = !!person;
+  const title = useMemo(() => {
+    if (!person) {
+      return "";
+    }
+    if (person === "new") {
+      return "Create person";
+    }
+    return `Edit person: ${person.name}`;
+  }, [person]);
+
   return (
-    <AppDialog
-      {...props}
-      title={`${isExistingPerson ? "Create" : "Edit"} person${person ? `: ${person.name}` : ""}`}
-    >
+    <AppDialog {...props} open={!!person} title={title}>
       <Fieldset
         as="form"
         className="space-y-6 rounded-xl bg-white/5 p-6 sm:p-10"

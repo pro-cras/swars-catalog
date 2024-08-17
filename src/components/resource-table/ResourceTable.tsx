@@ -6,41 +6,52 @@ import { Resource } from "../../api/api";
 import { useCallback, useMemo, useState } from "react";
 import { PeopleDialog } from "../PeopleDialog/PeopleDialog";
 
-export function ResourceTable<C extends "people">({
-  category,
-}: {
-  category: C;
-}) {
+export function ResourceTable() {
   const [searchParams] = useSearchParams();
   const query = useSearchCategory({
     query: searchParams.get("search") ?? "",
-    category,
+    category: "people",
   });
-  const [selectedResource, selectResource] = useState<
-    "new" | Resource<C> | null
-  >(null);
-  const [editedResources, setEditedResources] = useState<
-    Map<string, Resource<C> | null>
+  type Data = Resource<"people">;
+  const [selectedResource, selectResource] = useState<"new" | Data | null>(
+    null,
+  );
+  const [resourceChanges, setResourceChanges] = useState<
+    Map<string, Data | null>
   >(new Map());
-  const saveResource = useCallback((url: string, value: Resource<C> | null) => {
-    setEditedResources((prev) => {
-      const next = new Map(prev);
-      next.set(url, value);
-      return next;
-    });
-  }, []);
+  const [customId, setCustomId] = useState<number>(0);
+  const saveResource = useCallback(
+    (url: string | null, value: Data | null) => {
+      setResourceChanges((prev) => {
+        const next = new Map(prev);
+        let id: string | null = null;
+        if (url === null) {
+          id = customId.toString();
+          setCustomId((id) => id + 1);
+        } else {
+          id = url;
+        }
+        next.set(id, value);
+        return next;
+      });
+    },
+    [customId],
+  );
 
-  const editResource = useCallback((resource: Resource<C>) => {
+  const editResource = useCallback((resource: Data) => {
     selectResource(resource);
   }, []);
   const createNewResource = useCallback(() => {
     selectResource("new");
   }, []);
   const localData = useMemo(() => {
-    return (query.data?.results ?? []).map(
-      (resource) => editedResources.get(resource.url) ?? resource,
-    );
-  }, [editedResources, query.data?.results]);
+    return (query.data?.results ?? [])
+      .map((resource) => {
+        const savedResource = resourceChanges.get(resource.url);
+        return savedResource !== undefined ? savedResource : resource;
+      })
+      .filter((resource) => !!resource);
+  }, [resourceChanges, query.data?.results]);
 
   function renderContent() {
     if (query.status === "pending") {
@@ -56,16 +67,18 @@ export function ResourceTable<C extends "people">({
     return (
       <div className="flex flex-col gap-2">
         <div className="flex flex-row-reverse">
-          <Button>Create</Button>
+          <Button onClick={createNewResource}>Create</Button>
         </div>
         <DataTable
           data={localData}
           onDelete={(url) => saveResource(url, null)}
-          onEdit={(url, value) => saveResource(url, value)}
+          onEdit={editResource}
         />
         <PeopleDialog
           onClose={() => selectResource(null)}
-          onSubmit={() => {}}
+          onSubmit={(updatedResource: Data) => {
+            saveResource(updatedResource.url, updatedResource);
+          }}
           person={selectedResource}
         />
       </div>

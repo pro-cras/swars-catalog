@@ -20,7 +20,7 @@ export function DataTable({
 }: {
   data: TData[];
   onDelete: (url: string) => void;
-  onEdit: (url: string, value: TData) => void;
+  onEdit: (value: TData) => void;
 }) {
   const columns: ColumnDef<TData>[] = [
     {
@@ -39,7 +39,7 @@ export function DataTable({
       id: "actions",
       cell: (props) => (
         <RowActions
-          onDelete={() => onDelete(props.row.original)}
+          onDelete={() => onDelete(props.row.original.url)}
           onEdit={() => onEdit(props.row.original)}
         />
       ),
