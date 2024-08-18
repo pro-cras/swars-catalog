@@ -1,5 +1,5 @@
 import { generatePath } from "react-router-dom";
-import { Category } from "../../api/api";
+import { Category, Resource } from "../../api/api";
 import { useSearchCategory } from "../../api/search-category";
 import { getResourceTitle } from "../../utils/get-resource-title";
 import { titleCase } from "../../utils/title-case";
@@ -28,7 +28,7 @@ export function CategoryResults<C extends Category>({
     return (
       <ul className="flex flex-col gap-2">
         {query.data.results.slice(0, MAX_RESULTS_PER_CATEGORY).map((result) => (
-          <li key={result.url}>{getResourceTitle(result)}</li>
+          <li key={result.url}>{getResourceTitle(result as Resource)}</li>
         ))}
       </ul>
     );

@@ -8,9 +8,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "../button/Button";
-import { Resource } from "../../api/api";
+import { GenericResource } from "../../api/api";
 
-type Data = Resource<"people">;
+type Data = GenericResource<"people">;
 const columnHelper = createColumnHelper<Data>();
 
 export function DataTable({

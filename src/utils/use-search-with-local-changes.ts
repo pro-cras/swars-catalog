@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Category, Resource } from "../api/api";
+import { Category, GenericResource } from "../api/api";
 import { useSearchCategory } from "../api/search-category";
 import { useSearchTermParam } from "./use-search-term-param";
 import { PeopleFormData } from "../components/PeopleDialog/PeopleDialog";
@@ -16,7 +16,7 @@ export function useSearchWithLocalChanges<C extends Category>(category: C) {
     category,
   });
 
-  type Data = Resource<"people">;
+  type Data = GenericResource<"people">;
 
   const [resourceChanges, setResourceChanges] = useState<
     Map<string, Data | null>

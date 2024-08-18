@@ -7,13 +7,13 @@ import {
 } from "react";
 import AppDialog from "../dialog/Dialog";
 import { Fieldset, Field, Label } from "@headlessui/react";
-import { Resource } from "../../api/api";
+import { GenericResource } from "../../api/api";
 import clsx from "clsx";
 import { Button } from "../button/Button";
 import { FieldError, useForm } from "react-hook-form";
 
 export type PeopleFormData = Pick<
-  Resource<"people">,
+  GenericResource<"people">,
   "name" | "height" | "gender"
 >;
 

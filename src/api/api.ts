@@ -22,10 +22,18 @@ interface ResourceMap {
   films: { title: string };
 }
 
-export type Resource<C extends Category> = {
+export type GenericResource<C extends Category> = {
   url: string;
   category: C;
 } & ResourceMap[C];
+
+export type Resource =
+  | GenericResource<"people">
+  | GenericResource<"starships">
+  | GenericResource<"vehicles">
+  | GenericResource<"planets">
+  | GenericResource<"species">
+  | GenericResource<"films">;
 
 interface PeopleBasicProperties {
   name: string;

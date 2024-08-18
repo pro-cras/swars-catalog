@@ -1,11 +1,11 @@
 import { Button } from "../button/Button";
 import { DataTable } from "./data-table";
-import { Resource } from "../../api/api";
+import { GenericResource } from "../../api/api";
 import { useCallback, useState } from "react";
 import { PeopleDialog } from "../PeopleDialog/PeopleDialog";
 import { useSearchWithLocalChanges } from "../../utils/use-search-with-local-changes";
 
-type Data = Resource<"people">;
+type Data = GenericResource<"people">;
 
 export function ResourceTable() {
   const [selectedResource, selectResource] = useState<"new" | Data | null>(
