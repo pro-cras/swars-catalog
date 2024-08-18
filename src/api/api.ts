@@ -30,12 +30,12 @@ export type Resource<C extends Category> = {
 interface PeopleBasicProperties {
   name: string;
   height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
+  // mass: string;
+  // hair_color: string;
+  // skin_color: string;
+  // eye_color: string;
+  // birth_year: string;
   gender: string;
-  created: string;
-  edited: string;
+  // created: string;
+  // edited: string;
 }

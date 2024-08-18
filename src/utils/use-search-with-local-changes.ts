@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Category, Resource } from "../api/api";
 import { useSearchCategory } from "../api/search-category";
 import { useSearchTermParam } from "./use-search-term-param";
+import { PeopleFormData } from "../components/PeopleDialog/PeopleDialog";
 
 const CUSTOM_ID_PREFIX = "custom/";
 function isCustomId(id: string): boolean {
@@ -24,7 +25,7 @@ export function useSearchWithLocalChanges<C extends Category>(category: C) {
   const saveResource = useCallback(
     (
       args:
-        | { url: null; data: Omit<Data, "url" | "category"> } // create
+        | { url: null; data: Omit<PeopleFormData, "url" | "category"> } // create
         | { url: string; data: Partial<Data> } // update
         | { url: string; data: null }, // delete
     ) => {

@@ -10,19 +10,19 @@ import {
 import { Button } from "../button/Button";
 import { Resource } from "../../api/api";
 
-type TData = Resource<"people">;
-const columnHelper = createColumnHelper<TData>();
+type Data = Resource<"people">;
+const columnHelper = createColumnHelper<Data>();
 
 export function DataTable({
   data,
   onDelete,
   onEdit,
 }: {
-  data: TData[];
+  data: Data[];
   onDelete: (url: string) => void;
-  onEdit: (value: TData) => void;
+  onEdit: (value: Data) => void;
 }) {
-  const columns: ColumnDef<TData>[] = [
+  const columns: ColumnDef<Data>[] = [
     {
       accessorFn: (row) => row.name,
       header: "Name",

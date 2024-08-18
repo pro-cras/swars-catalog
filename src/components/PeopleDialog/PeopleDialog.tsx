@@ -12,16 +12,19 @@ import clsx from "clsx";
 import { Button } from "../button/Button";
 import { FieldError, useForm } from "react-hook-form";
 
-type FormData = Pick<Resource<"people">, "name" | "height" | "gender">;
+export type PeopleFormData = Pick<
+  Resource<"people">,
+  "name" | "height" | "gender"
+>;
 
 export function PeopleDialog({
   person,
   onSubmit: _onSubmit,
   onClose,
   ...props
-}: Omit<ComponentProps<typeof AppDialog>, "title" | "children"> & {
-  person: "new" | FormData | null;
-  onSubmit: (person: FormData) => void;
+}: Omit<ComponentProps<typeof AppDialog>, "title" | "children" | "onSubmit"> & {
+  person: "new" | PeopleFormData | null;
+  onSubmit: (person: PeopleFormData) => void;
 }) {
   const title = useMemo(() => {
     if (!person) {
@@ -42,12 +45,12 @@ export function PeopleDialog({
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<PeopleFormData>({
     defaultValues:
       person === "new" || person === null ? undefined : { name: "joe" },
   });
   const onSubmit = useCallback(
-    (data: FormData) => {
+    (data: PeopleFormData) => {
       _onSubmit(data);
       onClose(false);
     },

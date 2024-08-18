@@ -46,7 +46,7 @@ export function ResourceTable() {
         />
         <PeopleDialog
           onClose={closeDialog}
-          onSubmit={(formData: Data) => {
+          onSubmit={(formData) => {
             if (selectedResource === "new") {
               save({ url: null, data: formData });
             } else if (selectedResource !== null) {
