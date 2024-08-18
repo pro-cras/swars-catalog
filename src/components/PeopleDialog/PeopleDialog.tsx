@@ -1,4 +1,4 @@
-import {
+import React, {
   ComponentProps,
   forwardRef,
   useCallback,
@@ -73,8 +73,9 @@ export function PeopleDialog({
           <DialogLabel> Name</DialogLabel>
           <DialogInput
             {...register("name", { required: true })}
+            placeholder="Jabba the Hutt"
             error={errors.name}
-            autoFocus
+            data-autofocus
           />
         </Field>
         <Field>
@@ -82,6 +83,7 @@ export function PeopleDialog({
           <DialogInput
             type="number"
             {...register("height", { required: true })}
+            placeholder="198"
             error={errors.height}
           />
         </Field>
@@ -89,6 +91,7 @@ export function PeopleDialog({
           <DialogLabel> Gender </DialogLabel>
           <DialogInput
             {...register("gender", { required: true })}
+            placeholder="male"
             error={errors.gender}
           />
         </Field>
@@ -118,14 +121,10 @@ const DialogInput = forwardRef<
       {...props}
       title={error?.message ?? undefined}
       className={clsx(
-        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white placeholder-white/50 placeholder:italic",
         "data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
         {
-          "outline-red-500 outline-2 data-[focus]:outline-red-500/25 outline-":
-            !!error,
-        },
-        {
-          "focus:outline-none": !error,
+          "outline-red-500 outline-2 data-[focus]:outline-red-500/25": error,
         },
         className,
       )}
