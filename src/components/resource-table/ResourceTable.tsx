@@ -66,7 +66,7 @@ export function ResourceTable() {
       ...(query.data?.results ?? []),
       ...[...resourceChanges.values()]
         .filter((item) => !!item)
-        .filter((v) => v.url && isCustomId(v.url)),
+        .filter((item) => isCustomId(item.url)),
     ]
       .map((resource) => {
         const savedResourceChanges = resourceChanges.get(resource.url);

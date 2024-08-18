@@ -53,7 +53,7 @@ export function DataTable({
   });
 
   return (
-    <div className="border-black rounded-md border">
+    <div className="border-black rounded-md border p-4">
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

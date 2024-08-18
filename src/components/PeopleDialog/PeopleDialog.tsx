@@ -1,4 +1,10 @@
-import { ComponentProps, forwardRef, useCallback, useMemo } from "react";
+import {
+  ComponentProps,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import AppDialog from "../dialog/Dialog";
 import { Fieldset, Field, Label } from "@headlessui/react";
 import { Resource } from "../../api/api";
@@ -27,17 +33,18 @@ export function PeopleDialog({
     return `Edit person: ${person.name}`;
   }, [person]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _defaultValues = useMemo(
+  const defaultValues = useMemo(
     () => (person === "new" || person === null ? {} : person),
     [person],
   );
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: person === "new" || person === null ? {} : person,
+    defaultValues:
+      person === "new" || person === null ? undefined : { name: "joe" },
   });
   const onSubmit = useCallback(
     (data: FormData) => {
@@ -46,6 +53,11 @@ export function PeopleDialog({
     },
     [_onSubmit, onClose],
   );
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
 
   return (
     <AppDialog {...props} onClose={onClose} open={!!person} title={title}>
