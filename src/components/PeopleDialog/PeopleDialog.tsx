@@ -70,29 +70,34 @@ export function PeopleDialog({
         onSubmit={handleSubmit(onSubmit)}
       >
         <Field>
-          <DialogLabel> Name</DialogLabel>
+          <InputLabel label="Name" error={errors.name} />
           <DialogInput
-            {...register("name", { required: true })}
+            {...register("name", { required: "This is required" })}
             placeholder="Jabba the Hutt"
-            error={errors.name}
             data-autofocus
           />
         </Field>
         <Field>
-          <DialogLabel> Height </DialogLabel>
+          <InputLabel label="Height" error={errors.height} />
           <DialogInput
             type="number"
-            {...register("height", { required: true })}
+            {...register("height", {
+              required: "This is required",
+              min: {
+                value: 0.000001,
+                message: "Must be a positive number",
+              },
+            })}
             placeholder="198"
-            error={errors.height}
           />
         </Field>
         <Field>
-          <DialogLabel> Gender </DialogLabel>
+          <InputLabel label="Gender" error={errors.gender} />
           <DialogInput
-            {...register("gender", { required: true })}
+            {...register("gender", {
+              required: "This is required",
+            })}
             placeholder="male"
-            error={errors.gender}
           />
         </Field>
 
@@ -131,3 +136,16 @@ const DialogInput = forwardRef<
     />
   );
 });
+
+function InputLabel({ label, error }: { label: string; error?: FieldError }) {
+  return (
+    <div className="flex flex-row gap-4">
+      <DialogLabel>{label}</DialogLabel>
+      {error && (
+        <span className="text-black underline decoration-red-400">
+          {error.message}
+        </span>
+      )}
+    </div>
+  );
+}
