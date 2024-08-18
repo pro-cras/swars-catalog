@@ -1,15 +1,19 @@
-import { useSearchParams } from "react-router-dom";
 import { Button } from "../button/Button";
 import { useSearchCategory } from "../../api/search-category";
 import { DataTable } from "./data-table";
 import { Resource } from "../../api/api";
 import { useCallback, useMemo, useState } from "react";
 import { PeopleDialog } from "../PeopleDialog/PeopleDialog";
+import { useSearchTermParam } from "../../utils/use-search-term-param";
 
+const CUSTOM_ID_PREFIX = "custom/";
+function isCustomId(id: string): boolean {
+  return id.startsWith(CUSTOM_ID_PREFIX);
+}
 export function ResourceTable() {
-  const [searchParams] = useSearchParams();
+  const searchTerm = useSearchTermParam();
   const query = useSearchCategory({
-    query: searchParams.get("search") ?? "",
+    query: searchTerm ?? "",
     category: "people",
   });
   type Data = Resource<"people">;
@@ -21,17 +25,30 @@ export function ResourceTable() {
   >(new Map());
   const [customId, setCustomId] = useState<number>(0);
   const saveResource = useCallback(
-    (url: string | null, value: Data | null) => {
+    (
+      args:
+        | { url: null; data: Omit<Data, "url" | "category"> } // create
+        | { url: string; data: Partial<Data> } // update
+        | { url: string; data: null }, // delete
+    ) => {
       setResourceChanges((prev) => {
         const next = new Map(prev);
-        let id: string | null = null;
-        if (url === null) {
-          id = customId.toString();
+        if (args.url === null) {
+          // create
+          const id = customId.toString();
           setCustomId((id) => id + 1);
+          next.set(id, {
+            ...args.data,
+            url: CUSTOM_ID_PREFIX + id,
+            category: "people",
+          });
+        } else if (args.data === null) {
+          // delete
+          next.set(args.url, null);
         } else {
-          id = url;
+          // update
+          next.set(args.url, { ...prev.get(args.url)!, ...args.data });
         }
-        next.set(id, value);
         return next;
       });
     },
@@ -45,10 +62,26 @@ export function ResourceTable() {
     selectResource("new");
   }, []);
   const localData = useMemo(() => {
-    return (query.data?.results ?? [])
+    return [
+      ...(query.data?.results ?? []),
+      ...[...resourceChanges.values()]
+        .filter((item) => !!item)
+        .filter((v) => v.url && isCustomId(v.url)),
+    ]
       .map((resource) => {
-        const savedResource = resourceChanges.get(resource.url);
-        return savedResource !== undefined ? savedResource : resource;
+        const savedResourceChanges = resourceChanges.get(resource.url);
+        function resolveResourceChanges() {
+          switch (savedResourceChanges) {
+            case undefined: // no changes
+              return resource;
+            case null: // deleted
+              return null;
+            default: // updated
+              return { ...resource, ...savedResourceChanges };
+          }
+        }
+        const newValue = resolveResourceChanges();
+        return newValue;
       })
       .filter((resource) => !!resource);
   }, [resourceChanges, query.data?.results]);
@@ -71,13 +104,17 @@ export function ResourceTable() {
         </div>
         <DataTable
           data={localData}
-          onDelete={(url) => saveResource(url, null)}
+          onDelete={(url) => saveResource({ url, data: null })}
           onEdit={editResource}
         />
         <PeopleDialog
           onClose={() => selectResource(null)}
-          onSubmit={(updatedResource: Data) => {
-            saveResource(updatedResource.url, updatedResource);
+          onSubmit={(formData: Data) => {
+            if (selectedResource === "new") {
+              saveResource({ url: null, data: formData });
+            } else if (selectedResource !== null) {
+              saveResource({ url: selectedResource.url, data: formData });
+            }
           }}
           person={selectedResource}
         />
